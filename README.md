@@ -1,6 +1,9 @@
 # N_Pixelate
 Disables smoothing to make graphics look pixelated.
 
+![Comparison screenshot](comp1.png)  
+![Comparison screenshot](comp2.png)
+
 | Project    | Latest release   |
 | ---------- | ---------------- |
 | N_Pixelate | [1.0.0][release] |
