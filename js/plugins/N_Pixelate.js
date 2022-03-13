@@ -23,29 +23,64 @@
  */
 
 //=============================================================================
-// N_Pixelate
+// Metadata
 //=============================================================================
 /*:
  * @target MZ
  * @plugindesc Disables smoothing to make graphics look pixelated.
  * @author Nolonar
- * @url https://github.com/Nolonar/RM_Plugins-Pixelate
+ * @url https://github.com/Nolonar/RM_Plugins
+ * 
+ * @param isHybridPixelateEnabled
+ * @text Hybrid pixelate
+ * @desc If ON, disables pixelation when window is smaller than the game's resolution.
+ * @type boolean
+ * @default false
  * 
  * 
- * @help Version 1.0.0
+ * @help Version 1.1.0
  * This plugin does not provide plugin commands.
  */
 
 (() => {
-    const style = document.createElement("style");
-    style.type = "text/css";
-    style.innerText = "#gameCanvas, #GameCanvas { image-rendering: pixelated; }";
-    document.head.appendChild(style);
+    const PLUGIN_NAME = "N_Pixelate";
 
-    Bitmap = class Bitmap_Pixelated extends Bitmap {
-        initialize(width, height) {
-            super.initialize(width, height);
-            this.smooth = false;
+    const parameters = PluginManager.parameters(PLUGIN_NAME);
+    parameters.isHybridPixelateEnabled = parameters.isHybridPixelateEnabled === "true";
+
+    const pixelateClass = "pixelated";
+    const style = document.head.appendChild(document.createElement("style"));
+    style.innerText = `canvas.${pixelateClass} { image-rendering: pixelated; }`;
+
+    if (!parameters.isHybridPixelateEnabled) {
+        // override hybrid pixelation
+        style.innerText = "#gameCanvas, #GameCanvas { image-rendering: pixelated; }";
+    }
+
+    function onResize() {
+        // Canvas does not exist when plugin is loaded, and therefore must be accessed here.
+        const canvas = document.getElementById("gameCanvas") || document.getElementById("GameCanvas");
+
+        if (Graphics.height > window.innerHeight || Graphics.width > window.innerWidth) {
+            canvas.classList.remove(pixelateClass);
+        } else {
+            canvas.classList.add(pixelateClass);
         }
+    }
+
+    window.addEventListener("resize", onResize);
+
+    const Bitmap_initialize = Bitmap.prototype.initialize;
+    Bitmap.prototype.initialize = function (width, height) {
+        Bitmap_initialize.call(this, width, height);
+        this.smooth = false;
+    }
+
+    const Scene_Boot_initialize = Scene_Boot.prototype.initialize;
+    Scene_Boot.prototype.initialize = function () {
+        Scene_Boot_initialize.call(this);
+
+        // Canvas does not exist when plugin is loaded, and therefore must be accessed here.
+        onResize();
     }
 })();
