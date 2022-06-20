@@ -27,4 +27,4 @@ According to [LICENSE](LICENSE).
 
   [hub]: https://github.com/Nolonar/RM_Plugins
   [release]: https://github.com/Nolonar/RM_Plugins-Pixelate/releases/latest/download/N_Pixelate.js
-  [release_1_0_0]: https://github.com/Nolonar/RM_Plugins-Pixelate/releases/tag/v1.0.0
+  [release_1_0_0]: https://github.com/Nolonar/RM_Plugins-Pixelate/releases/download/v1.0.0/N_Pixelate.js
